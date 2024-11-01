@@ -1,10 +1,25 @@
 import requests
-import json
 from tkinter import *
 from tkinter import messagebox as mb
 
 
+def exchange():
+    code = entry.get()
+    if code:
 
+        try:
+            answer = requests.get('https://open.er-api.com/v6/latest/USD')
+            answer.raise_for_status()
+            data = answer.json()
+            if code in data['rates']:
+                exchange_rate = data['rates'][code]
+                mb.showinfo(title='Курс обмена', message=f'Курс: {exchange_rate} за 1$')
+            else:
+                mb.showerror(title='ОШИБКА!', message=f'Валюта {code} не найдена')
+        except Exception as e:
+            mb.showerror(title='ОШИБКА!', message=f'Произошла ошибка: {e}')
+    else:
+        mb.showwarning(title='ВНИМАНИЕ!', message='Введите код валюты!')
 
 
 window = Tk()
